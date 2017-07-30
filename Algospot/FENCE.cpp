@@ -1,62 +1,36 @@
-#include <cstdio>
-#include <cstring>
-#include <climits>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <stack>
-#include <queue>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
-typedef long long lld;
-
-#ifndef ONLINE_JUDGE
-#define gets(s) gets_s(s)
-#endif
-
-#define INF 987654321
-#define LINF (LLONG_MAX>>2)
-
-typedef pair<int, int> ii;
-
-// [left, right]
-lld solve(vector<int>& a, int left, int right) {
-	if (left == right) return a[left];
-
+int solve(const vector<int>& a, int left, int right) {
 	int mid = (left + right) / 2;
-	int l = mid, r = mid + 1;
-
-	int height = min(a[l], a[r]);
-	lld area = height * 2LL;
-	while (left < l || r < right) {
-		// 높이가 더 큰 쪽으로 진행한다
-		if (left < l && (r == right || a[l-1] > a[r+1])) {
-			height = min(height, a[--l]);
+	if (left > right) return 0;
+	if (left == right) return a[mid];
+	int sum = a[mid], l = mid, r = mid, h = a[mid];
+	while (left <= l - 1 || r + 1 <= right) {
+		if ( !(left <= l - 1) || (r + 1 <= right && a[l - 1] < a[r + 1]) ) {
+			h = min(h, a[++r]);
 		}
 		else {
-			height = min(height, a[++r]);
+			h = min(h, a[--l]);
 		}
-		area = max(area, (r - l + 1LL) * height);
+		sum = max(sum, h * (r - l + 1));
 	}
-
-	return max(
-		max(
-			solve(a, left, mid),
-			solve(a, mid + 1, right)
-		),
-		area
-	);
+	return max({
+		sum,
+		solve(a, left, mid),
+		solve(a, mid + 1, right)
+	});
 }
 
 int main() {
-	int T, n;
-    scanf("%d", &T);
-  	while(T--){
-	    scanf("%d", &n);
+	int T;
+	scanf("%d", &T);
+	while (T--) {
+		int n;
+		scanf("%d", &n);
 		vector<int> a(n);
 		for (int i = 0; i < n; ++i) scanf("%d", &a[i]);
-		printf("%lld\n", solve(a, 0, n-1));
+		printf("%d\n", solve(a, 0, a.size() - 1));
 	}
 	return 0;
 }
