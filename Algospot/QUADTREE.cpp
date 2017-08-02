@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define fastio() std::ios::sync_with_stdio(false);
+
 string f(const string& s, int cur) {
 	if (cur >= s.length()) return 0;
 	if (s[cur] != 'x') return string(1, s[cur]);
@@ -19,6 +21,7 @@ string f(const string& s, int cur) {
 }
 
 int main() {
+	fastio();
 	int T;
 	string s;
 	cin >> T;
