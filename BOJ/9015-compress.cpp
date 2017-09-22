@@ -24,6 +24,16 @@ struct point {
 	}
 };
 
+const int PIV = 10000;
+vector<int> yaxis[20001];
+
+// (x, ?) 에 y 가 있는지
+bool find(int y, int x){
+    x += PIV;
+    if(x < 0 || x > 20000) return false;
+    return binary_search(yaxis[x].begin(), yaxis[x].end(), y);
+}
+
 int main() {
 	int T;
 	scanf("%d ", &T);
@@ -31,22 +41,25 @@ int main() {
 		int n;
 		scanf("%d", &n);
 		vector<point> pt(n);
+		for(int i=0; i<=20000; ++i) yaxis[i].clear();
 		for (int y, x, i = 0; i < n; ++i) {
 			scanf("%d %d", &y, &x);
 			pt[i] = { y, x };
+            yaxis[x + PIV].push_back(y);
 		}
+        
 		sort(pt.begin(), pt.end());
+        for(int i=0; i<=20000; ++i) sort(yaxis[i].begin(), yaxis[i].end());
+        
 		int area = 0, size = pt.size();
 		for (int i = 0; i < size; ++i) {
 			for (int j = i + 1; j < size; ++j) {
 				int a = pt[i].y, b = pt[i].x;
 				int c = pt[j].y, d = pt[j].x;
 				int x = c - a, y = d - b;
-				point p1 = { a + y, b - x };
-				point p2 = { c + y, d - x };
                 int thisSize = x*x + y*y;
-				if (thisSize <= area || !binary_search(pt.begin(), pt.end(), p1)) continue;
-				if (binary_search(pt.begin(), pt.end(), p2)) area = max(area, thisSize);
+				if (thisSize <= area || !find(a + y, b - x) || !find(c + y, d - x)) continue;
+                area = thisSize;
 			}
 		}
 		printf("%d\n", area);
