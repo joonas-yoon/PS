@@ -1,23 +1,4 @@
-#ifndef ONLINE_JUDGE
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
-#include <utility>
-#include <cassert>
-#include <string>
-#include <vector>
-#include <queue>
-#include <stack>
-#include <list>
-#include <map>
-#include <set>
-#include <algorithm>
-#define gets(s) gets_s(s)
-#else
 #include <bits/stdc++.h>
-#endif
 using namespace std;
 
 #define fastio() std::ios::sync_with_stdio(false)
