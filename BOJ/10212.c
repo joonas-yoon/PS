@@ -1,0 +1,1 @@
+main(i,s){puts(s%3?"Yonsei":"Korea");}
