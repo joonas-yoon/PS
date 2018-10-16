@@ -2,14 +2,14 @@
 #include <algorithm>
 using namespace std;
 
-int n, m, arr[10];
-int c[10], cm[10];
+int n, m, res[10];
+int c[10010], cm[10010];
 int a[10];
 
 void print(int cnt) {
 	if (cnt >= m) {
 		for (int i = 0; i < cnt; ++i) {
-			printf("%d ", arr[i]);
+			printf("%d ", res[i]);
 		}
 		puts("");
 		return;
@@ -19,7 +19,7 @@ void print(int cnt) {
 		int x = a[i];
 		if (c[x] < cm[x]) {
 			c[x]++;
-			arr[cnt] = x;
+			res[cnt] = x;
 			print(cnt + 1);
 			c[x]--;
 		}
