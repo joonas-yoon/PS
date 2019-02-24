@@ -1,33 +1,36 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-char solve(int ab, int ba) {
-	if (!ab && !ba) return 0;
-	return ab ? -1 : 1;
-}
+#include <cstdio>
 
 int main() {
-	int n, k, a, b;
-	bool v[405][405] = {};
-	scanf("%d %d", &n, &k);
-	for (int i = 0; i < k; ++i) {
-		scanf("%d %d", &a, &b);
-		v[a - 1][b - 1] = true;
-	}
+    int n, K;
+    scanf("%d %d", &n, &K);
+    bool g[401][401] = {};
+    while (K--) {
+        int s, e;
+        scanf("%d %d", &s, &e);
+        g[s - 1][e - 1] = true;
+    }
 
-	for (int k = 0; k < n; ++k) {
-		for (int i = 0; i < n; ++i) {
-			for (int j = 0; j < n; ++j) {
-				v[i][j] |= v[i][k] & v[k][j];
-			}
-		}
-	}
+    for (int k = 0; k < n; ++k) {
+        for (int i = 0; i < n; ++i) {
+            if (!g[i][k]) continue;
+            for (int j = 0; j < n; ++j) {
+                g[i][j] |= g[i][k] & g[k][j];
+            }
+        }
+    }
 
-	int q;
-	scanf("%d", &q);
-	while (q--) {
-		scanf("%d %d", &a, &b);
-		printf("%d\n", solve(v[a - 1][b - 1], v[b - 1][a - 1]));
-	}
-	return 0;
+    int q;
+    scanf("%d", &q);
+    while (q--) {
+        int s, e;
+        scanf("%d %d", &s, &e);
+        if (g[s - 1][e - 1])
+            puts("-1");
+        else if (g[e - 1][s - 1])
+            puts("1");
+        else
+            puts("0");
+    }
+
+    return 0;
 }
