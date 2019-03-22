@@ -5,13 +5,15 @@ using namespace std;
 
 typedef map<int, int> mii;
 
-void find(int& res, mii& dat){
+// 두번 등장하지 않은 수를 찾는다.
+int find(mii& dat){
     for(auto& a : dat){
         if(a.second != 2){
-            res = a.first;
-            return;
+            return a.first;
         }
     }
+    // 사실 없는 경우는 없다.
+    return -1;
 }
 
 vector<int> solution(vector<vector<int> > v) {
@@ -22,7 +24,7 @@ vector<int> solution(vector<vector<int> > v) {
     }
     
     vector<int> ans(2);
-    find(ans[0], x);
-    find(ans[1], y);
+    ans[0] = find(x);
+    ans[1] = find(y);
     return ans;
 }
