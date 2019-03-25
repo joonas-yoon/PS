@@ -1,30 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int INF = 0x3f3f3f3f;
-
 vector<int> adj[205];
-int cap[205][205];
+bool cap[205][205];
 bool visit[205];
 
-int dfs(int src, int sink, int flow) {
-    if (visit[src]) return 0;
+bool dfs(int src, int sink) {
+    if (visit[src]) return false;
     visit[src] = true;
 
-    if (src == sink) return flow;
+    if (src == sink) return true;
 
-    for (int i = 0; i < adj[src].size(); ++i) {
-        int next = adj[src][i];
-        if (cap[src][next] > 0) {
-            int f = dfs(next, sink, min(flow, cap[src][next]));
-            if (f > 0) {
-                cap[src][next] -= f;
-                cap[next][src] += f;
-                return f;
+    for (auto& next : adj[src]) {
+        if (cap[src][next]) {
+            bool res = dfs(next, sink);
+            if (res) {
+                cap[src][next] = false;
+                cap[next][src] = true;
+                return true;
             }
         }
     }
-    return 0;
+    return false;
 }
 
 int main() {
@@ -41,18 +38,14 @@ int main() {
     }
 
     for (int i = 1; i <= n; ++i) {
-        cap[0][i] = 1;
-        adj[0].push_back(i);
-        adj[i].push_back(0);
         cap[n + i][sink] = 1;
         adj[n + i].push_back(sink);
-        adj[sink].push_back(n + i);
     }
 
     int ans = 0;
     for (int i = 1; i <= n; ++i) {
         memset(visit, false, sizeof(visit));
-        ans += dfs(i, sink, INF);
+        ans += dfs(i, sink);
     }
     printf("%d\n", ans);
 
