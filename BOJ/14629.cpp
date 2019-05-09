@@ -1,46 +1,39 @@
-#include <cstdio>
-#include <cstdlib>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef long long lld;
 
-#define LINF 0x3f3f3f3f3f3f3f3f
+lld n, ans;
+bool dig[10];
+int length;
 
-bool visit[10];
+void solve(int sel, lld val = 0) {
+    if (sel >= length) {
+        if (abs(n - ans) > abs(n - val)) {
+            ans = val;
+        }
+        return;
+    }
 
-lld x, ans = LINF;
-
-void gen(int n, lld k) {
-	if (n == 0) {
-		if (abs(x - ans) > abs(x - k)) ans = k;
-		return;
-	}
-
-	for (int i = 0; i < 10; ++i) {
-		if (!visit[i]) {
-			visit[i] = true;
-			gen(n - 1, 10 * k + i);
-			visit[i] = false;
-		}
-	}
+    for (int i = 0; i < 10; ++i) {
+        if (dig[i]) continue;
+        dig[i] = true;
+        solve(sel + 1, val * 10LL + i);
+        dig[i] = false;
+    }
 }
 
 int main() {
-	scanf("%lld", &x);
+    ans = 9876543210LL;
 
-    int len = 0;
-	for (lld temp = x; temp > 0; temp /= 10) ++len;
-    
-	if (len > 10) return puts("9876543210"), 0;
+    scanf("%lld", &n);
 
-	for (int i = 0; i < 10; ++i) {
-		visit[i] = true;
-		gen(len - 1, i);
-		visit[i] = false;
-	}
+    length = 0;
+    for (int i = n; i > 0; i /= 10) length++;
 
-	printf("%lld", ans);
+    solve(0, 0);
 
-	return 0;
+    printf("%lld\n", ans);
+
+    return 0;
 }
