@@ -1,55 +1,58 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-static int dy[] = { -1,0,1,0 };
-static int dx[] = { 0,1,0,-1 };
+static int dy[] = {-1,0,1,0};
+static int dx[] = {0,1,0,-1};
 
 int h, w;
-int a[51][51];
+bool clean[50][50];
+int g[51][51];
 
-bool inRange(int y, int x) {
-	return 0 <= y && y < h && 0 <= x && x < w;
+bool safe(int y, int x) {
+    return 0 <= y && y < h && 0 <= x && x < w && g[y][x] != 1;
 }
 
-int main(){
-	int cy, cx, cd;
-	scanf("%d %d %d %d %d", &h, &w, &cy, &cx, &cd);
-	for (int i = 0; i < h; ++i)
-		for (int j = 0; j < w; ++j)
-			scanf("%d", &a[i][j]);
+int main() {
+    int y, x, d;
+    scanf("%d %d %d %d %d", &h, &w, &y, &x, &d);
+    for (int i = 0; i < h; ++i) {
+        for (int j = 0; j < w; ++j) {
+            scanf("%d", &g[i][j]);
+        }
+    }
 
-	a[cy][cx] = 2;
+    while (safe(y, x)) {
+        clean[y][x] = true;
 
-	while (true) {
-		int ld = (cd + 3) % 4, nd = -1;
-		for (int i = 0; i < 4; ++i) {
-			int ny = cy + dy[i], nx = cx + dx[i];
-			if (inRange(ny, nx) && a[ny][nx] == 0) {
-				nd = i;
-				break;
-			}
-		}
-		if (nd == -1) {
-			int py = cy - dy[cd], px = cx - dx[cd];
-			if (!inRange(py, px) || a[py][px] == 1) break;
-			cy = py, cx = px;
-			continue;
-		}
+        int ny, nx, nd = -1;
+        for (int i = 1; i <= 4; ++i) {
+            int j = (d + 4 - i) % 4;
+            ny = y + dy[j];
+            nx = x + dx[j];
+            if (safe(ny, nx) && !clean[ny][nx]) {
+                nd = j;
+                break;
+            }
+        }
 
-		int ly = cy + dy[ld], lx = cx + dx[ld];
-		if (inRange(ly, lx) && a[ly][lx] == 0) {
-			a[ly][lx] = 2;
-			cy = ly, cx = lx, cd = ld;
-			continue;
-		}
-		cd = ld;
-	}
+        if (nd != -1) {
+            y = ny, x = nx, d = nd;
+            continue;
+        }
 
-	int ans = 0;
-	for (int i = 0; i < h; ++i)
-		for (int j = 0; j < w; ++j)
-			ans += a[i][j] == 2;
-	printf("%d\n", ans);
+        // 후진
+        int back = (d + 2) % 4;
+        y += dy[back];
+        x += dx[back];
+    }
 
-	return 0;
+    int ans = 0;
+    for (int i = 0; i < h; ++i) {
+        for (int j = 0; j < w; ++j) {
+            ans += clean[i][j];
+        }
+    }
+    printf("%d\n", ans);
+
+    return 0;
 }

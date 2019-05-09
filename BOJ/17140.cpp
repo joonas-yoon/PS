@@ -25,6 +25,7 @@ int solve(int y, int x, int goal) {
         memset(g1, 0, sizeof(g1));
         int ph = h, pw = w;
         if (ph >= pw) {
+            int tw = 0;
             FOR(i, ph) {
                 map<int, int> fq;
                 vector<elem> v;
@@ -35,14 +36,15 @@ int solve(int y, int x, int goal) {
                 sort(all(v));
                 int k = 0;
                 for (auto& x : v) {
-                    if (k >= 100) break;
-                    g1[i][k++] = x.n;
-                    if (k >= 100) break;
-                    g1[i][k++] = x.f;
+                    if (k < 100) g1[i][k++] = x.n;
+                    if (k < 100) g1[i][k++] = x.f;
                 }
-                w = max(w, k);
+                while (k > 0 && g1[i][k - 1] == 0) k--;
+                tw = max(tw, min(100, k));
             }
+            w = tw;
         } else {
+            int th = h;
             FOR(i, pw) {
                 map<int, int> fq;
                 vector<elem> v;
@@ -53,13 +55,13 @@ int solve(int y, int x, int goal) {
                 sort(all(v));
                 int k = 0;
                 for (auto& x : v) {
-                    if (k >= 100) break;
-                    g1[k++][i] = x.n;
-                    if (k >= 100) break;
-                    g1[k++][i] = x.f;
+                    if (k < 100) g1[k++][i] = x.n;
+                    if (k < 100) g1[k++][i] = x.f;
                 }
-                h = max(h, k);
+                while (k > 0 && g1[k - 1][i] == 0) k--;
+                th = max(th, min(100, k));
             }
+            h = th;
         }
 
         memcpy(g, g1, sizeof(g1));
