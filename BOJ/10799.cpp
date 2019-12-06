@@ -1,19 +1,19 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <cstdio>
 
-int main(){
-    int sum = 0;
-    string s;
-    cin >> s;
-    stack<char> bracket;
-    for (int i=0; i < s.length(); ++i){
-        if (s[i]=='(') bracket.push(s[i]);
+char s[100001];
+
+int main() {
+    scanf("%s", s);
+    int ans = 0, top = 0;
+    for (int i = 0; s[i]; ++i) {
+        if (s[i] == '(') top++;
         else {
-            bracket.pop();
-            if (s[i-1] == ')') sum += 1;
-            else sum += bracket.size();
+            --top;
+            if (s[i - 1] == ')') ans += 1;
+            else ans += top;
         }
     }
-    cout<< sum <<'\n';
+    printf("%d\n", ans);
+
     return 0;
 }

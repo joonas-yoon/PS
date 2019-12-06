@@ -3,30 +3,34 @@ using namespace std;
 
 typedef long long lld;
 
-int h, n;
-lld a[(1 << 21) + 1];
+int n;
+int a[(1<<21)+1];
 
-lld depth(int cur) {
-	if (cur > n) return 0;
-	int left = 2 * cur + 1;
-	int right = 2 * cur + 2;
-	lld l = depth(left), r = depth(right);
-	if (l > r) {
-		a[right] += l - r;
-	}
-	else if (l < r) {
-		a[left] += r - l;
-	}
-	return a[cur] + max(l, r);
+int f(int pos){
+    int l = 2 * pos + 1;
+    int r = l + 1;
+    // is leaf
+    if(l > n || r > n) return a[pos];
+    
+    int lsum = f(l), rsum = f(r);
+    if(lsum < rsum){
+        a[l] += rsum - lsum;
+    }
+    else if(lsum > rsum){
+        a[r] += lsum - rsum;
+    }
+    
+    return a[pos] + max(lsum, rsum);
 }
 
-int main() {
-	scanf("%d", &h);
-	n = 2 * ((1 << h) - 1);
-	for (int i = 1; i <= n; ++i) scanf("%lld ", &a[i]);
-	depth(0);
-	lld ans = 0;
-	for (int i = 1; i <= n; ++i) ans += a[i];
-	printf("%lld\n", ans);
-	return 0;
+int main(){
+    int k;
+    scanf("%d", &k);
+    n = (1<<(k+1))-1-1;
+    for(int i=1; i<=n; ++i) scanf("%d", &a[i]);
+    f(0);
+    int ans = 0;
+    for(int i=1; i<=n; ++i) ans += a[i];
+    printf("%d", ans);
+    return 0;
 }
